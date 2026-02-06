@@ -1,0 +1,64 @@
+[project]
+name = "assn_1"
+version = "0.1.0"
+description = ""
+authors = [
+    { name = "ochiga07", email = "aochi23@freeuni.edu.ge" }
+]
+requires-python = ">=3.13"
+
+dependencies = [
+    "ruff (>=0.14.0,<0.15.0)",
+    "mypy (>=1.18.2,<2.0.0)",
+    "pytest (>=8.4.2,<9.0.0)",
+    "requests (>=2.32.5,<3.0.0)",
+    "httpx (>=0.28.1,<0.29.0)",
+    "fastapi (>=0.119.1,<0.120.0)",
+    "uvicorn (>=0.38.0,<0.39.0)"
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest (>=8.4.2,<9.0.0)",
+    "pytest-cov (>=5.0.0,<6.0.0)",
+    "coverage (>=7.6.1,<8.0.0)",
+    "httpx (>=0.28.1,<0.29.0)",
+    "requests-mock (>=1.12.1,<2.0.0)"
+]
+
+[tool.mypy]
+ignore_missing_imports = true
+strict = true
+
+[tool.ruff.lint]
+select = [
+    "A",    # flake8-builtins
+    "ARG",  # flake8-unused-arguments
+    "B",    # flake8-bugbear
+    "C4",   # flake8-comprehensions
+    "PT",   # flake8-pytest-style
+    "RSE",  # flake8-raise
+    "RET",  # flake8-return
+    "SIM",  # flake8-simplify
+    "T20",  # flake8-print (disallows print)
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort – import sorting
+    "N",    # pep8-naming
+    "UP",   # pyupgrade
+]
+
+[tool.ruff.lint.isort]
+forced-separate = ["tests"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.pytest]
+testpaths = [
+    "tests",
+]
+
+[tool.setuptools]
+packages = ["creatures", "simulation"]

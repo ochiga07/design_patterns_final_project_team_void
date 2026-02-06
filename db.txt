@@ -1,0 +1,19 @@
+table Users {
+	int id;
+	string name;
+	string api_key;	
+}
+
+table Wallets {
+	int id;
+	int user_id FOREIGN KEY references user_id (Users);
+	int balance;  (in satoshis)
+	string wallet_address;
+}
+
+table Transactions {
+	int id;
+	int sender_wallet_id FOREIGN KEY references wallet_id (Wallets);
+	int receiver_wallet_id FOREIGN KEY references wallet_id (Wallets);
+	int transfer_amount; (in satoshis)
+}
