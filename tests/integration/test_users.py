@@ -6,6 +6,7 @@ from typing import Any
 import pytest
 from starlette.testclient import TestClient
 
+from dependencies.user_dependencies import get_user_service
 from main import app
 from repository.user_repository import UserRepository
 from service.user_service import UserService
@@ -13,7 +14,7 @@ from service.user_service import UserService
 
 @pytest.fixture
 def db_connection() -> Generator[Connection, Any]:
-    conn = sqlite3.connect(":memory:")
+    conn = sqlite3.connect(":memory:", check_same_thread=False)
     conn.row_factory = sqlite3.Row
     conn.execute("""
         CREATE TABLE Users (
@@ -33,7 +34,7 @@ def user_service(db_connection: Connection) -> UserService:
 
 @pytest.fixture
 def client(user_service: UserService) -> Generator[TestClient, Any]:
-    app.dependency_overrides = {"get_user_service": lambda: user_service} # type: ignore
+    app.dependency_overrides[get_user_service] = lambda: user_service
     yield TestClient(app)
     app.dependency_overrides.clear()
 
