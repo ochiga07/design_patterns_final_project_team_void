@@ -30,9 +30,31 @@ class UserRepository:
             "INSERT INTO Users (name, api_key) VALUES (?, ?)",
             (name, api_key),
         )
-        row = cursor.fetchone()
+        new_id = cursor.lastrowid
+        assert new_id is not None
         return User(
-            id=int(cursor.lastrowid),
+            id=int(new_id),
             name=name,
             api_key=api_key
         )
+
+    def get_user_by_id(self, user_id: int) -> User | None:
+        cursor = self.db_connection.cursor()
+        cursor.execute(
+            "SELECT id, name, api_key FROM Users WHERE id = ?", (user_id,)
+        )
+        row = cursor.fetchone()
+        if row:
+            return User(id=row["id"], name=row["name"], api_key=row["api_key"])
+        return None
+
+    def get_all_users(self) -> list[User]:
+        cursor = self.db_connection.cursor()
+        cursor.execute(
+            "SELECT id, name, api_key FROM Users"
+        )
+        rows = cursor.fetchall()
+        return [
+            User(id=row["id"], name=row["name"], api_key=row["api_key"])
+            for row in rows
+        ]

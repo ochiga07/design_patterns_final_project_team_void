@@ -22,6 +22,7 @@ class TestUserAPI:
 
     def test_create_user_success(self, client: TestClient) -> None:
         self.mock_service.create_user.return_value = UserResponseDto(
+            id=1,
             name="Naruto",
             api_key="generated_key"
         )
@@ -52,8 +53,8 @@ class TestUserAPI:
 
     def test_create_multiple_users(self, client: TestClient) -> None:
         self.mock_service.create_user.side_effect = [
-            UserResponseDto(name="yo", api_key="key1"),
-            UserResponseDto(name="yo", api_key="key2"),
+            UserResponseDto(id=1, name="yo", api_key="key1"),
+            UserResponseDto(id=2, name="yo", api_key="key2"),
         ]
 
         r1 = client.post("/users", json={"name": "A"})
@@ -66,3 +67,37 @@ class TestUserAPI:
         assert r2.json()["api_key"] == "key2"
 
         assert self.mock_service.create_user.call_count == 2
+
+    def test_get_all_users(self, client: TestClient) -> None:
+        self.mock_service.get_all_users.return_value = [
+            UserResponseDto(id=1,name="Naruto", api_key="key1"),
+            UserResponseDto(id=2,name="Sasuke", api_key="key2"),
+        ]
+
+        response = client.get("/users")
+
+        assert response.status_code == 200
+        data = response.json()
+        assert isinstance(data, list)
+        assert data[0]["name"] == "Naruto"
+        assert data[0]["api_key"] == "key1"
+        assert data[1]["name"] == "Sasuke"
+        assert data[1]["api_key"] == "key2"
+
+        self.mock_service.get_all_users.assert_called_once()
+
+    def test_get_user_by_id(self, client: TestClient) -> None:
+        self.mock_service.get_user.return_value = UserResponseDto(
+            id=1,
+            name="Naruto",
+            api_key="key1"
+        )
+
+        response = client.get("/users/123")
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["name"] == "Naruto"
+        assert data["api_key"] == "key1"
+
+        self.mock_service.get_user.assert_called_once_with(123)

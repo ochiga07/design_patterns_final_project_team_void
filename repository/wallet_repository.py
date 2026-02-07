@@ -8,18 +8,16 @@ class WalletRepository:
     def __init__(self, db_connection: sqlite3.Connection) -> None:
         self.db_connection = db_connection
 
-    def insert_wallet(self, user_id: int, balance: int,
-                      wallet_address: str) -> Wallet:
+    def insert_wallet(self, user_id: int, balance: int, wallet_address: str) -> Wallet:
         cursor = self.db_connection.cursor()
         cursor.execute(
-            "INSERT INTO Wallets (user_id, balance, wallet_address) "
-            "VALUES (?, ?, ?)",
+            "INSERT INTO Wallets (user_id, balance, wallet_address) VALUES (?, ?, ?)",
             (user_id, balance, wallet_address)
         )
-        return Wallet(
-            id=cursor.lastrowid, user_id=user_id,
-            balance=balance, wallet_address=wallet_address
-        )
+        wallet_id = cursor.lastrowid
+        if wallet_id is None:
+            raise ValueError("Failed to insert wallet, no ID returned")
+        return Wallet(id=wallet_id, user_id=user_id, balance=balance, wallet_address=wallet_address)
 
     def count_wallets_by_user_id(self, user_id: int) -> int:
         cursor = self.db_connection.cursor()
@@ -28,7 +26,7 @@ class WalletRepository:
             (user_id,)
         )
         row = cursor.fetchone()
-        return row["cnt"]
+        return int(row["cnt"])
 
     def get_wallet_by_address(self, wallet_address: str) -> Wallet | None:
         cursor = self.db_connection.cursor()
@@ -82,6 +80,22 @@ class WalletRepository:
             Wallet(
                 id=row["id"], user_id=row["user_id"],
                 balance=row["balance"], wallet_address=row["wallet_address"]
+            )
+            for row in rows
+        ]
+
+    def get_all_wallets(self) -> list[Wallet]:
+        cursor = self.db_connection.cursor()
+        cursor.execute(
+            "SELECT id, user_id, balance, wallet_address FROM Wallets"
+        )
+        rows = cursor.fetchall()
+        return [
+            Wallet(
+                id=row["id"],
+                user_id=row["user_id"],
+                balance=row["balance"],
+                wallet_address=row["wallet_address"]
             )
             for row in rows
         ]

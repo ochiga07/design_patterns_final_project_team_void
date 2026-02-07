@@ -56,3 +56,25 @@ class TestWalletAPI:
     def test_get_wallet_missing_api_key(self, client: TestClient) -> None:
         response = client.get("/wallets/addr1")
         assert response.status_code == 422
+
+    def test_get_all_wallets(self, client: TestClient) -> None:
+        from dto.wallet_response_dto import WalletResponseDto
+
+        self.mock_service.get_all_wallets.return_value = [
+            WalletResponseDto(wallet_address="abc123",
+                              balance_btc=0.5, balance_usd=25000.0),
+            WalletResponseDto(wallet_address="def456",
+                              balance_btc=1.2, balance_usd=60000.0),
+        ]
+
+        response = client.get("/wallets", headers={"x-api-key": "testkey"})
+        assert response.status_code == 200
+        data = response.json()
+        assert len(data) == 2
+        assert data[0]["wallet_address"] == "abc123"
+        assert data[0]["balance_btc"] == 0.5
+        assert data[0]["balance_usd"] == 25000.0
+        assert data[1]["wallet_address"] == "def456"
+        assert data[1]["balance_btc"] == 1.2
+        assert data[1]["balance_usd"] == 60000.0
+        self.mock_service.get_all_wallets.assert_called_once()
