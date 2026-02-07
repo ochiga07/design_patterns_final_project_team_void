@@ -30,4 +30,4 @@ def get_wallets(
     wallet_service: Annotated[WalletService, Depends(get_wallet_service)],
     x_api_key: str = Header(...)
 ) -> list[WalletResponseDto]:
-    return wallet_service.get_all_wallets(x_api_key)
+    return wallet_service.get_all_wallets()

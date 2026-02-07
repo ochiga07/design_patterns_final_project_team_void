@@ -81,7 +81,7 @@ class WalletService:
             balance_usd=balance_usd
         )
 
-    def get_all_wallets(self, api_key: str) -> list[WalletResponseDto]:
+    def get_all_wallets(self) -> list[WalletResponseDto]:
         wallets = self.wallet_repo.get_all_wallets()
         return [
             self._build_wallet_response(

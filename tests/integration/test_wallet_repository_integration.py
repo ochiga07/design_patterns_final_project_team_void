@@ -1,19 +1,17 @@
 import sqlite3
-from typing import Generator
+from collections.abc import Generator
 
 import pytest
 
-from entity.wallet import Wallet
 from repository.wallet_repository import WalletRepository
 
 
 @pytest.fixture
-def db_connection() -> Generator[sqlite3.Connection, None, None]:
+def db_connection() -> Generator[sqlite3.Connection]:
     """Create an in-memory database for testing."""
     connection = sqlite3.connect(":memory:")
     connection.row_factory = sqlite3.Row
-    
-    # Initialize database tables
+
     cursor = connection.cursor()
     cursor.execute("PRAGMA foreign_keys = ON;")
     cursor.executescript("""
@@ -32,7 +30,7 @@ def db_connection() -> Generator[sqlite3.Connection, None, None]:
     );
     """)
     connection.commit()
-    
+
     yield connection
     connection.close()
 

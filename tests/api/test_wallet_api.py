@@ -58,8 +58,6 @@ class TestWalletAPI:
         assert response.status_code == 422
 
     def test_get_all_wallets(self, client: TestClient) -> None:
-        from dto.wallet_response_dto import WalletResponseDto
-
         self.mock_service.get_all_wallets.return_value = [
             WalletResponseDto(wallet_address="abc123",
                               balance_btc=0.5, balance_usd=25000.0),
