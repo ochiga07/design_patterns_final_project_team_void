@@ -1,34 +1,50 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "assn_1"
 version = "0.1.0"
-description = ""
+description = "Bitcoin Wallet Management System"
 authors = [
-    { name = "ochiga07", email = "aochi23@freeuni.edu.ge" }
+    { name = "ochiga07", email = "aochi23@freeuni.edu.ge" },
+    { name = "Saba Ekhvaia", email = "sekhv23@freeuni.edu.ge" },
+    { name = "Andria Kobaidze", email = "akoba23@freeuni.edu.ge" }
 ]
 requires-python = ">=3.13"
-
 dependencies = [
-    "ruff (>=0.14.0,<0.15.0)",
-    "mypy (>=1.18.2,<2.0.0)",
-    "pytest (>=8.4.2,<9.0.0)",
-    "requests (>=2.32.5,<3.0.0)",
-    "httpx (>=0.28.1,<0.29.0)",
-    "fastapi (>=0.119.1,<0.120.0)",
-    "uvicorn (>=0.38.0,<0.39.0)"
+    "ruff>=0.14.0,<0.15.0",
+    "mypy>=1.18.2,<2.0.0",
+    "pytest>=8.4.2,<9.0.0",
+    "requests>=2.32.5,<3.0.0",
+    "types-requests>=2.32.0,<3.0.0",
+    "httpx>=0.28.1,<0.29.0",
+    "fastapi>=0.119.1,<0.120.0",
+    "uvicorn>=0.38.0,<0.39.0"
 ]
 
 [project.optional-dependencies]
 test = [
-    "pytest (>=8.4.2,<9.0.0)",
-    "pytest-cov (>=5.0.0,<6.0.0)",
-    "coverage (>=7.6.1,<8.0.0)",
-    "httpx (>=0.28.1,<0.29.0)",
-    "requests-mock (>=1.12.1,<2.0.0)"
+    "pytest>=8.4.2,<9.0.0",
+    "pytest-cov>=5.0.0,<6.0.0",
+    "coverage>=7.6.1,<8.0.0",
+    "httpx>=0.28.1,<0.29.0",
+    "requests-mock>=1.12.1,<2.0.0"
 ]
 
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["api*", "database*", "dependencies*", "dto*", "entity*", "exception*", "repository*", "service*"]
+
 [tool.mypy]
-ignore_missing_imports = true
 strict = true
+# ensures mypy sees the libraries in your virtual environment
+ignore_missing_imports = false
+
+# This block fixes the "missing library stubs" error specifically for requests
+[[tool.mypy.overrides]]
+module = "requests.*"
+ignore_missing_imports = true
 
 [tool.ruff.lint]
 select = [
@@ -56,9 +72,4 @@ forced-separate = ["tests"]
 max-complexity = 10
 
 [tool.pytest]
-testpaths = [
-    "tests",
-]
-
-[tool.setuptools]
-packages = ["creatures", "simulation"]
+testpaths = ["tests"]
