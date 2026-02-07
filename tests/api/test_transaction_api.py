@@ -1,4 +1,5 @@
-from typing import Any, Generator
+from collections.abc import Generator
+from typing import Any
 from unittest.mock import MagicMock
 
 import pytest
@@ -13,7 +14,7 @@ from main import app
 class TestTransactionAPI:
 
     @pytest.fixture(autouse=True)
-    def setup_mocks(self) -> Generator[None, Any, None]:
+    def setup_mocks(self) -> Generator[None, Any]:
         self.mock_service = MagicMock()
         app.dependency_overrides[get_transaction_service] = lambda: self.mock_service
         yield

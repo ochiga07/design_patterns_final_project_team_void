@@ -54,10 +54,11 @@ class TransactionService:
             sender_wallet.balance - transfer_amount
         )
 
-        transfer_fee = 0.0
-        transferred_amount = float(transfer_amount)
+        transfer_fee = 0
+        transferred_amount = transfer_amount
+
         if sender_wallet.user_id != receiver_wallet.user_id:
-            transfer_fee = transfer_amount * 0.015
+            transfer_fee = int(transfer_amount * 0.015)
             transferred_amount = transfer_amount - transfer_fee
 
         self.wallet_repo.update_balance(
@@ -167,6 +168,9 @@ class TransactionService:
                 f"Current balance: {sender_wallet.balance}, Transfer Amount: "
                 f"{transaction_create_dto.transfer_amount}"
             )
+
+        if sender_wallet.id == receiver_wallet.id:
+            raise WalletNotFoundError("Cannot transfer to the same wallet")
 
         transfer_fee, transferred_amount = self.update_balances(
             sender_wallet, receiver_wallet,

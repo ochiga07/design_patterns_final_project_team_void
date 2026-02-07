@@ -1,4 +1,5 @@
-from typing import Any, Generator
+from collections.abc import Generator
+from typing import Any
 from unittest.mock import MagicMock
 
 import pytest
@@ -12,7 +13,7 @@ from main import app
 class TestWalletAPI:
 
     @pytest.fixture(autouse=True)
-    def setup_mocks(self) -> Generator[None, Any, None]:
+    def setup_mocks(self) -> Generator[None, Any]:
         self.mock_service = MagicMock()
         app.dependency_overrides[get_wallet_service] = (
             lambda: self.mock_service)
