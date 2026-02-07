@@ -17,3 +17,7 @@ class UserNotFoundError(Exception):
 class WalletNotFoundError(Exception):
     def __init__(self, message: str):
         super().__init__(message)
+
+class WalletLimitExceededError(Exception):
+    def __init__(self, message: str):
+        super().__init__(message)
