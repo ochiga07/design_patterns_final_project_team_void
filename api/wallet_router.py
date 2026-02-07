@@ -27,7 +27,6 @@ def get_wallet(
 
 @wallet_router.get("")
 def get_wallets(
-    wallet_service: Annotated[WalletService, Depends(get_wallet_service)],
-    x_api_key: str = Header(...)
+    wallet_service: Annotated[WalletService, Depends(get_wallet_service)]
 ) -> list[WalletResponseDto]:
     return wallet_service.get_all_wallets()

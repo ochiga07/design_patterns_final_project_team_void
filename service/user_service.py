@@ -2,6 +2,7 @@ from dto.user_create_dto import UserCreateDto
 from dto.user_response_dto import UserResponseDto
 from repository.user_repository import UserRepository
 
+
 class UserService:
     def __init__(self, user_repo: UserRepository) -> None:
         self.user_repo = user_repo

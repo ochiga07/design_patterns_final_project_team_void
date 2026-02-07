@@ -17,7 +17,8 @@ class WalletRepository:
         wallet_id = cursor.lastrowid
         if wallet_id is None:
             raise ValueError("Failed to insert wallet, no ID returned")
-        return Wallet(id=wallet_id, user_id=user_id, balance=balance, wallet_address=wallet_address)
+        return Wallet(id=wallet_id, user_id=user_id,
+                      balance=balance, wallet_address=wallet_address)
 
     def count_wallets_by_user_id(self, user_id: int) -> int:
         cursor = self.db_connection.cursor()
