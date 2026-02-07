@@ -1,5 +1,6 @@
 import uuid
 
+from dto.basic_wallet_response_dto import BasicWalletResponseDto
 from dto.wallet_response_dto import WalletResponseDto
 from exception.exceptions import (
     UnauthorizedWalletAccessError,
@@ -81,12 +82,13 @@ class WalletService:
             balance_usd=balance_usd
         )
 
-    def get_all_wallets(self) -> list[WalletResponseDto]:
+    def get_all_wallets(self) -> list[BasicWalletResponseDto]:
         wallets = self.wallet_repo.get_all_wallets()
         return [
-            self._build_wallet_response(
+            BasicWalletResponseDto(
                 wallet_address=w.wallet_address,
-                balance_satoshis=w.balance
+                balance_btc=self.btc_price_converter.satoshi_to_btc(w.balance),
+                balance_satoshi=w.balance
             )
             for w in wallets
         ]

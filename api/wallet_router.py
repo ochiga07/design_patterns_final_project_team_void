@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Header
 
 from dependencies.wallet_dependencies import get_wallet_service
+from dto.basic_wallet_response_dto import BasicWalletResponseDto
 from dto.wallet_response_dto import WalletResponseDto
 from service.wallet_service import WalletService
 
@@ -28,5 +29,5 @@ def get_wallet(
 @wallet_router.get("")
 def get_wallets(
     wallet_service: Annotated[WalletService, Depends(get_wallet_service)]
-) -> list[WalletResponseDto]:
+) -> list[BasicWalletResponseDto]:
     return wallet_service.get_all_wallets()
