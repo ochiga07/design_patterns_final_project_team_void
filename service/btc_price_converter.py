@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Any
 
 import requests
 
@@ -26,5 +27,5 @@ class CoinGeckoBtcPriceConverter(BtcPriceConverter):
             timeout=10
         )
         response.raise_for_status()
-        data = response.json()
+        data: Any = response.json()
         return float(data["bitcoin"]["usd"])

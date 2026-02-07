@@ -16,8 +16,10 @@ class WalletRepository:
             "VALUES (?, ?, ?)",
             (user_id, balance, wallet_address)
         )
+        wallet_id = cursor.lastrowid
+        assert wallet_id is not None, "Failed to get wallet ID after insert"
         return Wallet(
-            id=cursor.lastrowid, user_id=user_id,
+            id=wallet_id, user_id=user_id,
             balance=balance, wallet_address=wallet_address
         )
 
@@ -28,7 +30,7 @@ class WalletRepository:
             (user_id,)
         )
         row = cursor.fetchone()
-        return row["cnt"]
+        return int(row["cnt"])
 
     def get_wallet_by_address(self, wallet_address: str) -> Wallet | None:
         cursor = self.db_connection.cursor()
